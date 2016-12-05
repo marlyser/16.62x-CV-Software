@@ -16,9 +16,9 @@ ts = time.time()
 st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 data.append(st)
 
-TA = 3
+TA = 1
 folder = "/home/mreeves/16.62x/Results/Test Article " + str(TA)+'/'
-TA_name = 'TA3_EV1_auto.png'
+TA_name = 'TA1_EV3_auto.png'
 raw_img = cv2.imread(folder+TA_name, 0)
 data.append(TA_name)
 
@@ -175,7 +175,7 @@ print pixtomm
 data.append(str(pixtomm))
 
 
-#p = set([(482, 551), (798, 538), (944, 533), (362, 556), (650, 545)])
+#p = set([(917, 257), (921, 448), (931, 930), (923, 598), (928, 788)])
 line_points = app.line_points
 print line_points
 
@@ -276,9 +276,13 @@ def Canny_detect(pre_img, TA_name):
 	
 def get_endpoints(rho, theta):
 	endpoints = []
-	
-	slope = -1*np.cos(theta)/np.sin(theta)
-	intercept = rho/np.sin(theta)
+	print rho, theta
+	if theta == 2*np.pi or theta == np.pi or theta == 0:
+		slope = -1
+		intercept = rho
+	else:
+		slope = -1*np.cos(theta)/np.sin(theta)
+		intercept = rho/np.sin(theta)
 	
 	endpoints.append(slope)
 	endpoints.append(intercept)
@@ -329,7 +333,7 @@ def line_Isequal(l1, l2): #lines given as (rho, theta)
 	if abs(l1[0]-l2[0]) >= max(abs(l1[0]*0.1), abs(l2[0]*.1)):
 		return False
 	
-	if abs(l1[1]-l2[1]) >= math.radians(3):
+	if abs(l1[1]-l2[1]) >= math.radians(5):
 		return False
 	
 	return True
@@ -362,6 +366,8 @@ def Hough_lines(canny_img, TA_name, raw_img):
 	for i in range(len(lines)):
 		rho = lines[i][0][0]
 		theta = lines[i][0][1]
+		if theta == 0:
+			theta = np.pi
 		all_lines.add((rho,theta))
 		#if e == 20:#rho < zero+e or np.pi/4-e+zero < rho < np.pi/4+e+zero or np.pi/2-e+zero < rho < np.pi/2+e+zero or np.pi*2-e < rho < np.pi*2:
 		a = np.cos(theta)
