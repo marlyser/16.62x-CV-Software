@@ -112,7 +112,8 @@ def get_true_edge(points, img):
 	B1 = np.array([intercept, 0])
 	try:
 		x1,y1 = np.linalg.solve(A1, B1)
-		endpoints.append((x1,y1))
+		if 0 <= x1<= 1553 and 0<=y1 <=1120:
+			endpoints.append((x1,y1))
 	except np.linalg.linalg.LinAlgError:
 		pass
 	
@@ -121,7 +122,8 @@ def get_true_edge(points, img):
 	B2 = np.array([intercept, 1120])
 	try:
 		x2,y2 = np.linalg.solve(A2, B2)
-		endpoints.append((x2,y2))
+		if 0 <= x2<= 1553 and 0<=y2 <=1120:
+			endpoints.append((x2,y2))
 	except np.linalg.linalg.LinAlgError:
 		pass
 	
@@ -130,7 +132,8 @@ def get_true_edge(points, img):
 	B3 = np.array([intercept, 0])
 	try:
 		x3,y3 = np.linalg.solve(A3, B3)
-		endpoints.append((x3,y3))
+		if 0 <= x3<= 1553 and 0<=y3 <=1120:
+			endpoints.append((x3,y3))
 	except np.linalg.linalg.LinAlgError:
 		pass
 	
@@ -139,7 +142,8 @@ def get_true_edge(points, img):
 	B4 = np.array([intercept, 1553])
 	try:
 		x4,y4 = np.linalg.solve(A4, B4)
-		endpoints.append((x4,y4))
+		if 0 <= x4<= 1553 and 0<=y4 <=1120:
+			endpoints.append((x4,y4))
 	except np.linalg.linalg.LinAlgError:
 		pass
 
@@ -149,6 +153,7 @@ def get_true_edge(points, img):
 	
 	cv2.imwrite('truth_'+ TA_name, img)
 	
-	return endpoints
+	return (slope,endpoints)
 
 truth_data = get_true_edge(p, undst_copy)
+print truth_data
