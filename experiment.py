@@ -18,7 +18,7 @@ data.append(st)
 
 TA = 1
 folder = "/home/mreeves/16.62x/Results/Test Article " + str(TA)+'/'
-TA_name = 'TA1_EV3_auto.png'
+TA_name = 'TA1_EV4_auto.png'
 raw_img = cv2.imread(folder+TA_name, 0)
 data.append(TA_name)
 
@@ -503,7 +503,7 @@ def localization(undst_img):
 	
 	if type(all_endpoints) is str:
 		print all_endpoints
-		data.append(all_endpoints
+		data.append(all_endpoints)
 		return
 	
 	exp_line = filter_endpoints(all_endpoints)
