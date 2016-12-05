@@ -16,9 +16,9 @@ ts = time.time()
 st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 data.append(st)
 
-TA = 2
+TA = 18
 folder = "/home/mreeves/16.62x/Results/Test Article " + str(TA)+'/'
-TA_name = 'TA2_EV1.png'
+TA_name = 'TA18_EV4_auto.png'
 raw_img = cv2.imread(folder+TA_name, 0)
 data.append(TA_name)
 
@@ -330,7 +330,7 @@ def get_endpoints(rho, theta):
 	return endpoints
 	
 def line_Isequal(l1, l2): #lines given as (rho, theta)
-	if abs(l1[0]-l2[0]) >= max(abs(l1[0]*0.1), abs(l2[0]*.1)):
+	if abs(abs(l1[0])-abs(l2[0])) >= 100: #max(abs(l1[0]*0.1), abs(l2[0]*.1)):
 		return False
 	
 	if abs(l1[1]-l2[1]) >= math.radians(5):
@@ -408,21 +408,26 @@ def Hough_lines(canny_img, TA_name, raw_img):
 	return endpoints
 	
 def filter_endpoints(endpoints):
+	if len(endpoints) > 5:
+		return "Fail: Too many edges detected"
 	top = [y for y in endpoints if y[2][1] == 0 or y[2][1] == 1120]
 	left = [x for x in endpoints if x[2][0] == 0 or x[2][0] == 1553]
 	
-	if len(top) > 3 or len(left) > 3:
-		return "Fail: Too many edges detected"
+	if len(top) == 3:
+		top.sort(key=lambda x: x[2][0])
+		top_l = [np.linalg.norm(x[0]-x[1]) for x in top]
+		if top_l.index(max(top_l)) != 2:
+			return top[top_l.index(max(top_l))]
+		return top[1]
+	elif len(left) == 3 or len(left) == 2:
+		left.sort(key = lambda y: y[2][1])
+		left.reverse()
+		left_l = [np.linalg.norm(x[0]-x[1]) for x in left]
+		if left_l.index(max(top_l)) != 2:
+			return left[left_l.index(max(left_l))]
+		return left[1]
 	else:
-		if len(top) == 3:
-			top.sort(key=lambda x: x[2][0])
-			return top[1]
-		elif len(left) == 3 or len(left) == 2:
-			left.sort(key = lambda y: y[2][1])
-			left.reverse()
-			return left[1]
-		else:
-			return "Fail: Too few edges detected"
+		return "Fail: Too few edges detected"
 
 def draw_lines(img, true_line, exp_line, TA_name):
 	cv2.line(img,(int(true_line[0][0]),int(true_line[0][1])) ,(int(true_line[1][0]),int(true_line[1][1])),(255,0,0),2)
