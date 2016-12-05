@@ -16,9 +16,9 @@ ts = time.time()
 st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 data.append(st)
 
-TA = 1
+TA = 2
 folder = "/home/mreeves/16.62x/Results/Test Article " + str(TA)+'/'
-TA_name = 'TA1_EV4_auto.png'
+TA_name = 'TA2_EV1.png'
 raw_img = cv2.imread(folder+TA_name, 0)
 data.append(TA_name)
 
@@ -363,7 +363,7 @@ def Hough_lines(canny_img, TA_name, raw_img):
 	all_lines = set([])
 	raw_c = raw_img.copy()
 	lines = cv2.HoughLines(canny_img,1,np.pi/180,t)
-	if len(lines) == 0:
+	if lines is None:
 		return 'Fail: No edges detected'
 	for i in range(len(lines)):
 		rho = lines[i][0][0]
