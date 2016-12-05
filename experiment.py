@@ -363,6 +363,8 @@ def Hough_lines(canny_img, TA_name, raw_img):
 	all_lines = set([])
 	raw_c = raw_img.copy()
 	lines = cv2.HoughLines(canny_img,1,np.pi/180,t)
+	if len(lines) == 0:
+		return 'Fail: No edges detected'
 	for i in range(len(lines)):
 		rho = lines[i][0][0]
 		theta = lines[i][0][1]
@@ -498,6 +500,11 @@ def localization(undst_img):
 	canny_img = Canny_detect(pre_img, TA_name)
 	
 	all_endpoints = Hough_lines(canny_img, TA_name, undst_img_copy)
+	
+	if type(all_endpoints) is str:
+		print all_endpoints
+		data.append(all_endpoints
+		return
 	
 	exp_line = filter_endpoints(all_endpoints)
 	
