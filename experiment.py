@@ -16,12 +16,10 @@ ts = time.time()
 st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 data.append(st)
 
-TA = 1
+TA = 3
 folder = "/home/mreeves/16.62x/Results/Test Article " + str(TA)+'/'
-TA_name = 'TA1_EV1_auto.png'
+TA_name = 'TA3_EV1_auto.png'
 raw_img = cv2.imread(folder+TA_name, 0)
-TA_num = int(TA_name[2])
-EV_num = int(TA_name[6])
 data.append(TA_name)
 
 #1) IMAGE UNDISTORTION
@@ -173,11 +171,13 @@ def get_pixtomm(points):
 	return pixtomm
 
 pixtomm = get_pixtomm(app.fid_pts)
+print pixtomm
 data.append(str(pixtomm))
 
 
-#p = set([(916, 536), (908, 352), (901, 226), (910, 445), (896, 116)])
+#p = set([(482, 551), (798, 538), (944, 533), (362, 556), (650, 545)])
 line_points = app.line_points
+print line_points
 
 def get_true_edge(points, img):
 	unzipped = zip(*points)
@@ -400,8 +400,8 @@ def Hough_lines(canny_img, TA_name, raw_img):
 	return endpoints
 	
 def filter_endpoints(endpoints):
-	top = [y for y in endpoints if y[2][1] == 0]
-	left = [x for x in endpoints if x[2][0] == 0]
+	top = [y for y in endpoints if y[2][1] == 0 or y[2][1] == 1120]
+	left = [x for x in endpoints if x[2][0] == 0 or x[2][0] == 1553]
 	
 	if len(top) > 3 or len(left) > 3:
 		return "Fail: Too many edges detected"
@@ -410,7 +410,8 @@ def filter_endpoints(endpoints):
 			top.sort(key=lambda x: x[2][0])
 			return top[1]
 		elif len(left) == 3 or len(left) == 2:
-			left.sort(key = lambda y: y[2][1]).reverse()
+			left.sort(key = lambda y: y[2][1])
+			left.reverse()
 			return left[1]
 		else:
 			return "Fail: Too few edges detected"
@@ -427,8 +428,10 @@ def pass_fail(true_line, exp_line):
 	m = true_line[0]
 	alpha = np.arctan(1/m)
 	theta = np.pi/2 - alpha
-	x = mm_1/np.sin(theta)
-	y = mm_1/np.sin(alpha)
+	x = abs(mm_1/np.sin(theta))
+	y = abs(mm_1/np.sin(alpha))
+	
+
 	
 	dist1 = np.linalg.norm(np.array(true_line[2]) - np.array(exp_line[2]))
 	dist2 = np.linalg.norm(np.array(true_line[3]) - np.array(exp_line[3]))
