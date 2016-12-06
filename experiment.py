@@ -16,9 +16,9 @@ ts = time.time()
 st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 data.append(st)
 
-TA = 18
+TA = 40
 folder = "/home/mreeves/16.62x/Results/Test Article " + str(TA)+'/'
-TA_name = 'TA18_EV4_auto.png'
+TA_name = 'TA40_EV5.png'
 raw_img = cv2.imread(folder+TA_name, 0)
 data.append(TA_name)
 
@@ -415,15 +415,15 @@ def filter_endpoints(endpoints):
 	
 	if len(top) == 3:
 		top.sort(key=lambda x: x[2][0])
-		top_l = [np.linalg.norm(x[0]-x[1]) for x in top]
-		if top_l.index(max(top_l)) != 2:
+		top_l = [np.linalg.norm(np.array(x[2])-np.array(x[3])) for x in top]
+		if top_l.index(max(top_l)) != 1:
 			return top[top_l.index(max(top_l))]
 		return top[1]
 	elif len(left) == 3 or len(left) == 2:
 		left.sort(key = lambda y: y[2][1])
 		left.reverse()
-		left_l = [np.linalg.norm(x[0]-x[1]) for x in left]
-		if left_l.index(max(top_l)) != 2:
+		left_l = [np.linalg.norm(np.array(x[2])-np.array(x[3])) for x in left]
+		if left_l.index(max(left_l)) != 1:
 			return left[left_l.index(max(left_l))]
 		return left[1]
 	else:
